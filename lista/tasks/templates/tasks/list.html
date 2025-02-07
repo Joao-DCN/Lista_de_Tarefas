@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %} Lista de Tarefas {% endblock %}
+
+{% block content %}
+
+<div class="offset-1 col-10 list-div">
+    <h1>Lista de Tarefa</h1>
+    <a class="add-link" href="newtask/">
+        <div class="col-2 add-div">
+            <i class="bi bi-plus"></i> Adicionar Tarefa
+        </div>
+    </a>
+    <form method="get" class="mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label for="status" class="col-form-label">Filtrar por status:</label>
+            </div>
+            <div class="col-auto">
+                <select name="status" id="status" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="concluido">Concluído</option>
+                    <option value="em_andamento">Em andamento</option>
+                    <option value="pendente">Pendente</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+    {%if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="alert alert-{{message.tags}}" {% endif %}>{{message}}</li>
+        {% endfor %}
+    </ul>
+    {%endif%}
+
+    <ul class="task-list">
+        {% for task in tasks%}
+        <li class="task-item">
+            <samp><a href="/task/{{task.id}}">{{task.title}}</a></samp>
+
+            <a href="edit/{{task.id}}"><samp><i class="bi bi-pencil-square"></i></samp></a>
+            <a href="delete/{{task.id}}" class="delete-btn"><samp><i class="bi bi-trash-fill"></i><samp></a>
+            <samp><i class="bi bi-card-heading"> {{task.status}}</i></samp>
+        </li>
+        {%endfor%}
+    </ul>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if tasks.has_previous %}
+            <a href="?page={{ tasks.previous_page_number }}"><i class="bi bi-chevron-left"></i></a>
+            {% endif %}
+
+            {% if tasks.paginator.num_pages %}
+            <span class="current">
+                {{ tasks.number }} de {{ tasks.paginator.num_pages }}
+            </span>
+            {% endif %}
+
+            {% if tasks.has_next %}
+            <a href="?page={{ tasks.next_page_number }}"><i class="bi bi-chevron-right"></i></a>
+            {% endif %}
+        </span>
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}
